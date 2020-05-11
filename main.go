@@ -7,14 +7,14 @@ import (
 	"log"
 	"net/http"
 
-	super "github.com/SubhasriBattula/shoppingtask2/super"
+	supermarket "github.com/SubhasriBattula/shoppingtask2/supermarket"
 
 	"github.com/gorilla/mux"
 )
 
-func itemGet(w http.ResponseWriter, r *http.Request) {
+func getItem(w http.ResponseWriter, r *http.Request) {
 	name := mux.Vars(r)["item"]
-	val, err := super.Get(name)
+	val, err := supermarket.Get(name)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 	} else {
@@ -22,15 +22,15 @@ func itemGet(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func itemPost(w http.ResponseWriter, r *http.Request) {
+func postItem(w http.ResponseWriter, r *http.Request) {
 	var temp map[string]interface{}
 	req, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		fmt.Fprintf(w, "enter data in correct format")
+		fmt.Fprintf(w, "enter only item and value")
 	}
 	json.Unmarshal(req, &temp)
 	for item, value := range temp {
-		err := super.Post(item, value)
+		err := supermarket.Post(item, value)
 		if err != nil {
 			w.WriteHeader(http.StatusBadRequest)
 		} else {
@@ -38,43 +38,44 @@ func itemPost(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 }
-func itemUpdate(w http.ResponseWriter, r *http.Request) {
+
+func updateItem(w http.ResponseWriter, r *http.Request) {
 	var temp map[string]interface{}
 	req, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		fmt.Fprintf(w, "enter data in correct format")
+		fmt.Fprintf(w, "enter only item and value")
 	}
 	json.Unmarshal(req, &temp)
 	for item, value := range temp {
-		err := super.Put(item, value)
+		err := supermarket.Put(item, value)
 		if err != nil {
 			w.WriteHeader(http.StatusBadRequest)
 		} else {
-			fmt.Fprintf(w, "Item updated successfully")
+			fmt.Fprintf(w, "Item are updated successfully")
 		}
 	}
 }
 
-func itemDelete(w http.ResponseWriter, r *http.Request) {
+func deleteItem(w http.ResponseWriter, r *http.Request) {
 	name := mux.Vars(r)["item"]
-	err := super.Delete(name)
+	err := supermarket.Delete(name)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 	} else {
-		fmt.Fprintf(w, "Items deleted successfully")
+		fmt.Fprintf(w, "Items are deleted successfully")
 	}
 }
 
-func itemGetAll(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, super.Print())
+func getAllItems(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintln(w, supermarket.Print())
 }
 
 func main() {
 	router := mux.NewRouter().StrictSlash(true)
-	router.HandleFunc("/supermarket/{item}", itemGet).Methods("GET")
-	router.HandleFunc("/supermarket", itemPost).Methods("POST")
-	router.HandleFunc("/supermarket", itemUpdate).Methods("PUT")
-	router.HandleFunc("/supermarket/{item}", itemDelete).Methods("DELETE")
-	router.HandleFunc("/supermarket", itemGetAll).Methods("GET")
+	router.HandleFunc("/supermarket/{item}", getItem).Methods("GET")
+	router.HandleFunc("/supermarket", postItem).Methods("POST")
+	router.HandleFunc("/supermarket", updateItem).Methods("PUT")
+	router.HandleFunc("/supermarket/{item}", deleteItem).Methods("DELETE")
+	router.HandleFunc("/supermarket", getAllItems).Methods("GET")
 	log.Fatal(http.ListenAndServe(":8080", router))
 }
