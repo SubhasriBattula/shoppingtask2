@@ -4,55 +4,54 @@ import (
 	"errors"
 )
 
-var item = map[string]interface{}{
+var listitems = map[string]interface{}{
 	"rice":       490.10,
 	"soaps":      65.60,
 	"cereals":    349.99,
-	"chocolates": 30.50,
+	"chocolates": 100.50,
 }
 
-func Get(name string) (interface{}, error) {
-	if item[name] != nil {
-		return item[name], nil
+func GetProduct(productname string) (interface{}, error) {
+	if listitems[productname] != nil {
+		return listitems[productname], nil
 	} else {
 		return nil, errors.New("Item not found")
 	}
 }
 
-func Post(name string, value interface{}) error {
-	if item[name] != nil {
-
-		return errors.New("Item already exists")
+func PostProduct(productname string, value interface{}) error {
+	if listitems[productname] != nil {
+		return errors.New("Item is already in the list")
 	} else {
-		if item == nil {
-			item = make(map[string]interface{})
-			item[name] = value
+		if listitems == nil {
+			listitems = make(map[string]interface{})
+			listitems[productname] = value
 		} else {
-			item[name] = value
+			listitems[productname] = value
 		}
 		return nil
 	}
 
 }
 
-func Put(name string, value interface{}) error {
+func PutProduct(productname string, value interface{}) error {
 
-	if item[name] == nil {
-		return errors.New("Item does not exist")
+	if listitems[productname] == nil {
+		return errors.New("Item is not in the list")
 	} else {
-		item[name] = value
+		listitems[productname] = value
 		return nil
 	}
 }
 
-func Delete(name string) error {
-	if item[name] != nil {
-		delete(item, name)
+func DeleteProduct(productname string) error {
+	if listitems[productname] != nil {
+		delete(listitems, productname)
 		return nil
 	} else {
 		return errors.New("Item not found")
 	}
 }
-func Print() map[string]interface{} {
-	return item
+func PrintProduct() map[string]interface{} {
+	return listitems
 }
