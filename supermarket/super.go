@@ -5,10 +5,11 @@ import (
 )
 
 var listitems = map[string]interface{}{
-	"rice":       490.10,
-	"soaps":      65.60,
-	"cereals":    349.99,
-	"chocolates": 100.50,
+	"rice":       490.87,
+	"coffee":      75.60,
+	"cereals":    350.50,
+	"chocolates": 100.90,
+	"biscuit": 30.50,
 }
 
 func GetProduct(productname string) (interface{}, error) {
